@@ -323,7 +323,6 @@ void pa1616d_handle_send(void) {
 			if(pa1616d.buffer_send[0] == '$') {
 				pa1616d.send_index     = 0;
 				pa1616d.last_send_time = system_timer_get_ms();
-				logd("---> send %s", pa1616d.buffer_send);
 			}
 		}
 	}
@@ -333,7 +332,6 @@ void pa1616d_handle_send(void) {
 		while(pa1616d.send_index < length) {
 			if(!XMC_USIC_CH_TXFIFO_IsFull(PA1616D_USIC)) {
 				PA1616D_USIC->IN[0] = pa1616d.buffer_send[pa1616d.send_index];
-				uartbb_tx(pa1616d.buffer_send[pa1616d.send_index]);
 				pa1616d.send_index++;
 			}
 		}
@@ -357,7 +355,6 @@ void pa1616d_handle_recv(void) {
 			NVIC_EnableIRQ((IRQn_Type)PA1616D_IRQ_RX);
 			break;
 		}
-		uartbb_tx(sentence[index]);
 		NVIC_EnableIRQ((IRQn_Type)PA1616D_IRQ_RX);
 
 		if(sentence[index] == '\n') {
