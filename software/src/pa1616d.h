@@ -114,7 +114,6 @@ typedef struct {
 	char buffer_send[PA1616D_SEND_BUFFER_SIZE];
 	Ringbuffer ringbuffer_recv;
 
-    uint8_t antenna_config;
 	uint16_t buffer_recv_counter;
 	PA1616DState state;
 	uint32_t wait_8ms_start_time;

@@ -57,9 +57,6 @@ void communication_init(void);
 #define GPS_V3_SBAS_ENABLED 0
 #define GPS_V3_SBAS_DISABLED 1
 
-#define GPS_V3_ANTENNA_INTERNAL 0
-#define GPS_V3_ANTENNA_EXTERNAL 1
-
 #define GPS_V3_BOOTLOADER_MODE_BOOTLOADER 0
 #define GPS_V3_BOOTLOADER_MODE_FIRMWARE 1
 #define GPS_V3_BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT 2
@@ -101,8 +98,6 @@ void communication_init(void);
 #define FID_GET_DATE_TIME_CALLBACK_PERIOD 20
 #define FID_SET_SBAS_CONFIG 27
 #define FID_GET_SBAS_CONFIG 28
-#define FID_SET_ANTENNA_CONFIG 29
-#define FID_GET_ANTENNA_CONFIG 30
 
 #define FID_CALLBACK_PULSE_PER_SECOND 21
 #define FID_CALLBACK_COORDINATES 22
@@ -330,20 +325,6 @@ typedef struct {
 	uint8_t sbas_config;
 } __attribute__((__packed__)) GetSBASConfig_Response;
 
-typedef struct {
-	TFPMessageHeader header;
-	uint8_t antenna_config;
-} __attribute__((__packed__)) SetAntennaConfig;
-
-typedef struct {
-	TFPMessageHeader header;
-} __attribute__((__packed__)) GetAntennaConfig;
-
-typedef struct {
-	TFPMessageHeader header;
-	uint8_t antenna_config;
-} __attribute__((__packed__)) GetAntennaConfig_Response;
-
 
 // Function prototypes
 BootloaderHandleMessageResponse get_coordinates(const GetCoordinates *data, GetCoordinates_Response *response);
@@ -368,8 +349,6 @@ BootloaderHandleMessageResponse set_date_time_callback_period(const SetDateTimeC
 BootloaderHandleMessageResponse get_date_time_callback_period(const GetDateTimeCallbackPeriod *data, GetDateTimeCallbackPeriod_Response *response);
 BootloaderHandleMessageResponse set_sbas_config(const SetSBASConfig *data);
 BootloaderHandleMessageResponse get_sbas_config(const GetSBASConfig *data, GetSBASConfig_Response *response);
-BootloaderHandleMessageResponse set_antenna_config(const SetAntennaConfig *data);
-BootloaderHandleMessageResponse get_antenna_config(const GetAntennaConfig *data, GetAntennaConfig_Response *response);
 
 // Callbacks
 bool handle_pulse_per_second_callback(void);
