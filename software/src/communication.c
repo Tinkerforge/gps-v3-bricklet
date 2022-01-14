@@ -58,8 +58,6 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_DATE_TIME_CALLBACK_PERIOD: return get_date_time_callback_period(message, response);
 		case FID_SET_SBAS_CONFIG: return set_sbas_config(message);
 		case FID_GET_SBAS_CONFIG: return get_sbas_config(message, response);
-		case FID_SET_ANTENNA_CONFIG: return set_antenna_config(message);
-		case FID_GET_ANTENNA_CONFIG: return get_antenna_config(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -327,29 +325,6 @@ BootloaderHandleMessageResponse get_sbas_config(const GetSBASConfig *data, GetSB
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-
-BootloaderHandleMessageResponse set_antenna_config(const SetAntennaConfig *data) {
-	if(data->antenna_config > GPS_V3_ANTENNA_EXTERNAL) {
-		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
-	}
-	pa1616d.antenna_config = data->antenna_config;
-	if(pa1616d.antenna_config == GPS_V3_ANTENNA_INTERNAL) {
-		XMC_GPIO_SetOutputHigh(PA1616D_ANT_SWITCH_PIN);
-	} else {
-		XMC_GPIO_SetOutputLow(PA1616D_ANT_SWITCH_PIN);
-	}
-
-	logd("Antenna Changed %d\n\r", pa1616d.antenna_config);
-
-	return HANDLE_MESSAGE_RESPONSE_EMPTY;
-}
-
-BootloaderHandleMessageResponse get_antenna_config(const GetAntennaConfig *data, GetAntennaConfig_Response *response) {
-	response->header.length  = sizeof(GetAntennaConfig_Response);
-	response->antenna_config = pa1616d.antenna_config;
-
-	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
-}
 
 bool handle_pulse_per_second_callback(void) {
 	static bool last_pps_high = false;
