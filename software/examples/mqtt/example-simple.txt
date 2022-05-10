@@ -1,0 +1,6 @@
+# Change XYZ to the UID of your GPS Bricklet 3.0
+
+setup:
+	# Get current coordinates
+	subscribe to tinkerforge/response/gps_v3_bricklet/XYZ/get_coordinates
+	publish '' to tinkerforge/request/gps_v3_bricklet/XYZ/get_coordinates
