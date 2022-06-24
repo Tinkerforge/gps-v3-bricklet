@@ -546,11 +546,20 @@ void pa1616d_init(void) {
 	pa1616d.last_data_time = system_timer_get_ms();
 	pa1616d.last_interrupt_time = system_timer_get_ms();
 	pa1616d.last_send_time = system_timer_get_ms();
-	// Busy-wait until baudrate is changed on PA1616D and then set it
+
 	pa1616d.sbas = PA1616D_SBAS_BAUDRATE;
+	// Busy-wait until PA1616D baudrate is changed from 9600 to 115200
 	do {
 		pa1616d_handle_send();
 	} while((pa1616d.send_index != -1) || (pa1616d.sbas == PA1616D_SBAS_BAUDRATE));
+
+	// Wait for baudrate change command to be completely send
+	while(XMC_USIC_CH_TXFIFO_GetLevel(PA1616D_USIC) != 0) {
+		__NOP();
+	}
+	system_timer_sleep_ms(10); // Wait a bit more to be sure that the last byte is out of the shift register
+
+	// Change baudrate of USIC hardware unit to 115200
 	XMC_USIC_CH_SetBaudrate(PA1616D_USIC, 115200, 16);
 
 	pa1616d.sbas_enabled = true;
