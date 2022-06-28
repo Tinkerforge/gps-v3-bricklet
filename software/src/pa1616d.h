@@ -124,6 +124,7 @@ typedef struct {
 	uint32_t last_data_time;
 	uint32_t reset_time;
 	uint32_t last_send_time;
+	uint32_t tick_init_time;
     int16_t send_index;
 
 	uint8_t restart;

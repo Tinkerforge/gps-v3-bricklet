@@ -248,7 +248,7 @@ void pa1616d_handle_sentence(const char *sentence) {
 				if(talker == TALKER_GLONASS) {
 					pnr -= 64; // GLONASS IDs go from 65 to 96
 				} else if(talker == TALKER_GALILEO) {
-					pnr -= 300; // GALILEO IDs go from 301 to 336
+					//pnr -= 300; // GALILEO IDs go from 301 to 336 but is given as 1-36 by PD1616D
 				}
 				if(pnr < 1 || pnr > 32) { // pnr should always be between 1 and 32
 					continue;
@@ -531,18 +531,7 @@ void pa1616d_handle_fix_led(void) {
 	}
 }
 
-void pa1616d_tick(void) {
-	pa1616d_handle_recv();
-	pa1616d_handle_send();
-	pa1616d_handle_fix_led();
-}
-
-void pa1616d_init(void) {
-	memset(&pa1616d, 0, sizeof(PA1616D));
-
-	pa1616d_init_buffer();
-	pa1616d_init_hardware();
-
+void pa1616d_tick_init(void) {
 	pa1616d.last_data_time = system_timer_get_ms();
 	pa1616d.last_interrupt_time = system_timer_get_ms();
 	pa1616d.last_send_time = system_timer_get_ms();
@@ -564,4 +553,26 @@ void pa1616d_init(void) {
 
 	pa1616d.sbas_enabled = true;
 	pa1616d_update_sbas();
+}
+
+void pa1616d_tick(void) {
+	// Wait for 1s for PA1616D to boot before we try to initialize it
+	if((pa1616d.tick_init_time != 0) && (system_timer_is_time_elapsed_ms(pa1616d.tick_init_time, 1000))) {
+		pa1616d_tick_init();
+		pa1616d.tick_init_time = 0;
+	} else {
+		pa1616d_handle_recv();
+		pa1616d_handle_send();
+		pa1616d_handle_fix_led();
+	}
+}
+
+void pa1616d_init(void) {
+	system_timer_sleep_ms(500);
+	memset(&pa1616d, 0, sizeof(PA1616D));
+
+	pa1616d_init_buffer();
+	pa1616d_init_hardware();
+
+	pa1616d.tick_init_time = system_timer_get_ms();
 }
