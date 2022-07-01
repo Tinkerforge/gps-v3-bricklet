@@ -1552,6 +1552,11 @@
     (pad 20 smd roundrect (at 7.8 -6.75) (size 2 1) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.15)
       (net 46 "Net-(U1-Pad20)"))
     (pad "" np_thru_hole circle (at 0 -0.45) (size 1.2 1.2) (drill 1.2) (layers *.Cu *.Mask))
+    (model Sensors_Detectors/PA1616D.wrl
+      (at (xyz 0 0 0))
+      (scale (xyz 1 1 1))
+      (rotate (xyz 0 0 0))
+    )
   )
 
   (module kicad-libraries:QFN24-4x4mm-0.5mm (layer F.Cu) (tedit 590CA070) (tstamp 5F86F703)
